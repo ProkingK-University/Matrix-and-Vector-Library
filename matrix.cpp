@@ -1,18 +1,54 @@
 #include "matrix.h"
 
-Matrix::Matrix(unsigned r, unsigned c)
+Matrix::Matrix(unsigned r, unsigned c) : rows(r), cols(c)
 {
+    matrix = new double*[rows];
 
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new double[cols];
+    }
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            matrix[i][j] = 0;
+        }
+    }
 }
 
 Matrix::Matrix(const Matrix& rhs)
 {
+    rows = rhs.rows;
+    cols = rhs.cols;
 
+    matrix = new double*[rows];
+
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new double[cols];
+    }
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            matrix[i][j] = rhs.matrix[i][j];
+        }
+    }
 }
 
 Matrix::~Matrix()
 {
+    for (int i = 0; i < rows; i++)
+    {
+        delete [] matrix[i];
+        matrix[i] = NULL;
+    }
 
+    delete [] matrix;
+    matrix = NULL;
 }
 
 void Matrix::print()
@@ -27,7 +63,39 @@ void Matrix::readFile(istream &infile)
 
 const Matrix& Matrix::operator=(const Matrix& rhs)
 {
+    if (&rhs == this)
+    {
+        return *this;
+    }
+    else
+    {
+        for (int i = 0; i < rows; i++)
+        {
+            delete [] matrix[i];
+            matrix[i] = NULL;
+        }
 
+        delete [] matrix;
+        matrix = NULL;
+
+        rows = rhs.rows;
+        cols = rhs.cols;
+
+        matrix = new double*[rows];
+
+        for (int i = 0; i < rows; i++)
+        {
+            matrix[i] = new double[cols];
+        }
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                matrix[i][j] = rhs.matrix[i][j];
+            }
+        }
+    }
 }
 
 Matrix Matrix::operator+(const Matrix& rhs)
