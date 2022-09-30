@@ -1,5 +1,7 @@
 #include "matrix.h"
 
+#include <iomanip>
+
 Matrix::Matrix(unsigned r, unsigned c) : rows(r), cols(c)
 {
     matrix = new double*[rows];
@@ -53,12 +55,26 @@ Matrix::~Matrix()
 
 void Matrix::print()
 {
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            std::cout<< std::setw(10) << std::setprecision(3) << matrix[i][j];
+        }
 
+        std::cout<<std::endl;
+    }
 }
 
 void Matrix::readFile(istream &infile)
 {
-
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            infile >> matrix[i][j];
+        }
+    }
 }
 
 const Matrix& Matrix::operator=(const Matrix& rhs)
@@ -86,108 +102,454 @@ const Matrix& Matrix::operator=(const Matrix& rhs)
         for (int i = 0; i < rows; i++)
         {
             matrix[i] = new double[cols];
-        }
 
-        for (int i = 0; i < rows; i++)
-        {
             for (int j = 0; j < cols; j++)
             {
                 matrix[i][j] = rhs.matrix[i][j];
             }
         }
+
+        return *this;
     }
 }
 
 Matrix Matrix::operator+(const Matrix& rhs)
 {
+    if ((rows != rhs.rows) || (cols != rhs.cols))
+    {
+        throw "Error: adding matrices of different dimensionality";
+    }
+    else
+    {
+        Matrix a(*this);
 
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                a.matrix[i][j] += rhs.matrix[i][j];
+            }
+        }
+
+        return a;
+    }
 }
 
 Matrix& Matrix::operator+=(const Matrix& rhs)
 {
+    if ((rows != rhs.rows) || (cols != rhs.cols))
+    {
+        throw "Error: adding matrices of different dimensionality";
+    }
+    else
+    {
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                matrix[i][j] += rhs.matrix[i][j];
+            }
+        }
 
+        return *this;
+    }
 }
 
 Matrix Matrix::operator-(const Matrix& rhs)
 {
+    if ((rows != rhs.rows) || (cols != rhs.cols))
+    {
+        throw "Error: subtracting matrices of different dimensionality";
+    }
+    else
+    {
+        Matrix a(*this);
 
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                a.matrix[i][j] -= rhs.matrix[i][j];
+            }
+        }
+
+        return a;
+    }
 }
 
 Matrix& Matrix::operator-=(const Matrix& rhs)
 {
+    if ((rows != rhs.rows) || (cols != rhs.cols))
+    {
+        throw "Error: subtracting matrices of different dimensionality";
+    }
+    else
+    {
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                matrix[i][j] -= rhs.matrix[i][j];
+            }
+        }
 
+        return *this;
+    }
 }
 
 Matrix Matrix::operator*(const Matrix& rhs)
 {
+    if (cols != rhs.rows)
+    {
+        throw "Error: invalid matrix multiplication";
+    }
+    else
+    {
+        Matrix a(cols, rhs.rows);
 
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < rhs.cols; j++)
+            {
+                for (int l = 0; l < rhs.rows; l++)
+                {
+                    a[i][j] += matrix[i][l] * rhs.matrix[l][j];
+                }
+            }
+        }
+
+        return a;
+    }
 }
 
 Matrix& Matrix::operator*=(const Matrix& rhs)
 {
+    if (cols != rhs.rows)
+    {
+        throw "Error: invalid matrix multiplication";
+    }
+    else
+    {
+        Matrix m(cols, rhs.rows);
 
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < rhs.cols; j++)
+            {
+                for (int l = 0; l < rhs.rows; l++)
+                {
+                    m[i][j] += matrix[i][l] * rhs.matrix[l][j];
+                }
+            }
+        }
+
+        *this = m;
+        
+        return *this;
+    }
 }
 
 Matrix Matrix::operator^(int pow)
 {
+    if (rows == cols)
+    {
+        throw "Error: non-square matrix provided";
+    }
+    else if(pow < 0)
+    {
+        throw "Error: negative power is not supported";
+    }
+    else if (pow == 0)
+    {
+        Matrix a(*this);
 
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                if (i == j)
+                {
+                    a.matrix[i][j] = 1;
+                }
+                else
+                {
+                    a.matrix[i][j] = 0;
+                }
+            }
+        }
+
+        return a;
+    }
+    else
+    {
+        Matrix a(*this);
+
+        for (int i = 0; i < pow; i++)
+        {
+            a *= a;
+        }
+        
+        return a;
+    }
 }
 
 Matrix& Matrix::operator^=(int pow)
 {
+    if (rows == cols)
+    {
+        throw "Error: non-square matrix provided";
+    }
+    else if(pow < 0)
+    {
+        throw "Error: negative power is not supported";
+    }
+    else if (pow == 0)
+    {
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                if (i == j)
+                {
+                    matrix[i][j] = 1;
+                }
+                else
+                {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
 
+        return *this;
+    }
+    else
+    {
+        for (int i = 0; i < pow; i++)
+        {
+            *this *= *this;
+        }
+        
+        return *this;
+    }
 }
 
 Matrix Matrix::operator~()
 {
+    Matrix a(*this);
 
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            a.matrix[i][j] = matrix[j][i];
+        }
+    }
+
+    return a;
 }
 
 Matrix Matrix::operator*(const double& rhs)
 {
+    Matrix a(*this);
 
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            a.matrix[i][j] *= rhs;
+        }
+    }
+
+    return a;
 }
 
-Matrix operator* (const double&, const Matrix&)
+Matrix operator* (const double& n, const Matrix& m)
 {
+    Matrix a(m);
 
+    for (int i = 0; i < a.rows; i++)
+    {
+        for (int j = 0; j < a.cols; j++)
+        {
+            a.matrix[i][j] *= n;
+        }
+    }
+
+    return a;
 }
 
 Matrix& Matrix::operator*=(const double& rhs)
 {
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            matrix[i][j] *= rhs;
+        }
+    }
 
+    return *this;
 }
 
 Matrix Matrix::operator/(const double& rhs)
 {
+    if (rhs == 0)
+    {
+        throw "Error: division by zero";
+    }
+    else
+    {
+        Matrix a(*this);
 
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                a.matrix[i][j] /= rhs;
+            }
+        }
+
+        return a;
+    }
 }
 
-double& Matrix::operator()(const unsigned r, const unsigned c)
+double& Matrix::operator()(const unsigned r, const unsigned c) 
 {
-
+    if (r < 0 || r >= rows)
+    {
+        throw "Error: invalid row index";
+    }
+    else if (c < 0 || c >= cols)
+    {
+        throw "Error: invalid column index";
+    }
+    else
+    {
+        return matrix[r][c];
+    }
 }
 
 const double& Matrix::operator()(const unsigned r, const unsigned c) const
 {
-
+    if (r < 0 || r >= rows)
+    {
+        throw "Error: invalid row index";
+    }
+    else if (c < 0 || c >= cols)
+    {
+        throw "Error: invalid column index";
+    }
+    else
+    {
+        return matrix[r][c];
+    }
 }
 
 Vector Matrix::operator[](const unsigned r) const
 {
+    if (r < 0 || r >= rows)
+    {
+        throw "Error: invalid row index";
+    }
+    else
+    {
+        Vector v(cols);
 
+        if (matrix[r])
+        {
+            for (int i = 0; i < cols; i++)
+            {
+                v[i] = matrix[r][i];
+            }
+            
+            return v;
+        }
+        else
+        {
+            return v;
+        }
+    }
 }
 
-unsigned Matrix::getRows() const {}
+unsigned Matrix::getRows() const {return rows;}
 
-unsigned Matrix::getCols() const {}
+unsigned Matrix::getCols() const {return cols;}
 
 Matrix Matrix::operator|(const Matrix& rhs)
 {
+    if (rows != cols)
+    {
+        throw "Error: non-square matrix provided";
+    }
+    else if (rhs.rows != rows && rhs.cols != 1)
+    {
+        throw "Error: incorrect augmentation";
+    }
+    else
+    {
+        Matrix A(*this);
+        Matrix s(rhs);
 
+        for (int i = A.rows-1; i >= 0; i--)
+        {
+            for (int j = i; j < A.rows; j++)
+            {
+                s(i,0) -= A(i,j) * s(j,0);
+            }
+
+            if (A(i,i) == 0)
+            {
+                throw "Error: division by zero";
+            }
+            else
+            {
+                s(i,0) /= A(i,i);
+            }
+        }
+
+        return s;
+    }
 }
 
 Matrix& Matrix::operator|=(Matrix& rhs)
 {
-    
+    if (rows != cols)
+    {
+        throw "Error: non-square matrix provided";
+    }
+    else if (rhs.rows != rows && rhs.cols != 1)
+    {
+        throw "Error: incorrect augmentation";
+    }
+    else
+    {
+        double m;
+
+        Matrix A(*this);
+        Matrix b(rhs);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = i; j < rows; i++)
+            {
+                if (A(i,i) == 0)
+                {
+                    throw "Error: division by zero";
+                }
+                else
+                {
+                    m = A(j,i) / A(i,i);
+
+                    for (int k = 0; k < cols; k++)
+                    {
+                        A(j,k) -= m * A(i,k);
+                    }
+
+                    b(j,0) -= m * b(i,0);
+                }
+            }
+        }
+
+        return A;
+    }
 }
