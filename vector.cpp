@@ -158,9 +158,9 @@ Vector Vector::operator^(int pow)
 
         for (unsigned int i = 0; i < size; i++)
         {
-            for (int i = 0; i < pow; i++)
+            for (int j = 1; j < pow; j++)
             {
-                a.vector[i] *= a.vector[i];
+                a.vector[i] *= vector[i];
             }
         }
 
@@ -176,13 +176,17 @@ Vector& Vector::operator^=(int pow)
     }
     else
     {
+        Vector a(*this);
+
         for (unsigned int i = 0; i < size; i++)
         {
-            for (int i = 0; i < pow; i++)
+            for (int j = 1; j < pow; j++)
             {
-                vector[i] *= vector[i];
+                a.vector[i] *= vector[i];
             }
         }
+
+        *this = a;
 
         return *this;
     }

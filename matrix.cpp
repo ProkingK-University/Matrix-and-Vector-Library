@@ -205,7 +205,7 @@ Matrix Matrix::operator*(const Matrix& rhs)
     }
     else
     {
-        Matrix a(cols, rhs.rows);
+        Matrix a(rows, rhs.cols);
 
         for (int i = 0; i < rows; i++)
         {
@@ -213,7 +213,7 @@ Matrix Matrix::operator*(const Matrix& rhs)
             {
                 for (int l = 0; l < rhs.rows; l++)
                 {
-                    a[i][j] += matrix[i][l] * rhs.matrix[l][j];
+                    a.matrix[i][j] += matrix[i][l] * rhs.matrix[l][j];
                 }
             }
         }
@@ -238,7 +238,7 @@ Matrix& Matrix::operator*=(const Matrix& rhs)
             {
                 for (int l = 0; l < rhs.rows; l++)
                 {
-                    m[i][j] += matrix[i][l] * rhs.matrix[l][j];
+                    m.matrix[i][j] += matrix[i][l] * rhs.matrix[l][j];
                 }
             }
         }
@@ -251,7 +251,7 @@ Matrix& Matrix::operator*=(const Matrix& rhs)
 
 Matrix Matrix::operator^(int pow)
 {
-    if (rows == cols)
+    if (rows != cols)
     {
         throw "Error: non-square matrix provided";
     }
@@ -284,9 +284,9 @@ Matrix Matrix::operator^(int pow)
     {
         Matrix a(*this);
 
-        for (int i = 0; i < pow; i++)
+        for (int i = 1; i < pow; i++)
         {
-            a *= a;
+            a *= *this;
         }
         
         return a;
@@ -295,7 +295,7 @@ Matrix Matrix::operator^(int pow)
 
 Matrix& Matrix::operator^=(int pow)
 {
-    if (rows == cols)
+    if (rows != cols)
     {
         throw "Error: non-square matrix provided";
     }
@@ -324,10 +324,14 @@ Matrix& Matrix::operator^=(int pow)
     }
     else
     {
-        for (int i = 0; i < pow; i++)
+        Matrix a(*this);
+
+        for (int i = 1; i < pow; i++)
         {
-            *this *= *this;
+            a *= *this;
         }
+
+        *this = a;
         
         return *this;
     }
@@ -335,13 +339,13 @@ Matrix& Matrix::operator^=(int pow)
 
 Matrix Matrix::operator~()
 {
-    Matrix a(*this);
+    Matrix a(cols, rows);
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            a.matrix[i][j] = matrix[j][i];
+            a.matrix[j][i] = matrix[i][j];
         }
     }
 
