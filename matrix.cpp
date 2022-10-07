@@ -553,7 +553,7 @@ Matrix& Matrix::operator|=(Matrix& rhs)
     {
         throw "Error: non-square matrix provided";
     }
-    else if (rhs.rows != rows && rhs.cols != 1)
+    else if (rhs.rows != rows || rhs.cols != 1)
     {
         throw "Error: incorrect augmentation";
     }
