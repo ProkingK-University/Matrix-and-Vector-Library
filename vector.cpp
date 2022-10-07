@@ -61,6 +61,8 @@ const Vector& Vector::operator=(const Vector& rhs)
     }
     else
     {
+        delete [] vector;
+
         size = rhs.size;
 
         vector = new double[size];

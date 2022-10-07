@@ -491,12 +491,44 @@ Matrix Matrix::operator|(const Matrix& rhs)
     }
     else
     {
+        bool augmented = true;
+
         Matrix A(*this);
         Matrix s(rhs);
 
-        for (int i = A.rows-1; i >= 0; i--)
+        Matrix copyA(*this);
+        Matrix copyS(rhs);
+
+        copyA|=copyS;
+
+        for (int i = 0; i < A.rows; i++)
         {
-            for (int j = i; j < A.rows; j++)
+            for (int j = 0; j < A.cols; j++)
+            {
+                if (A(i,j) != copyA(i,j))
+                {
+                    augmented = false;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < s.rows; i++)
+        {
+            if (s(i,0) != copyS(i,0))
+            {
+                augmented = false;
+            }
+        }
+
+        if (!augmented)
+        {
+            A |= s;
+        }
+
+        for (int i = rows-1; i >= 0; i--)
+        {
+            for (int j = i+1; j < rows; j++)
             {
                 s(i,0) -= A(i,j) * s(j,0);
             }
@@ -532,9 +564,9 @@ Matrix& Matrix::operator|=(Matrix& rhs)
         Matrix A(*this);
         Matrix b(rhs);
 
-        for (int i = 0; i < rows; i++)
+        for (int i = 0; i < rows-1; i++)
         {
-            for (int j = i; j < rows; i++)
+            for (int j = i+1; j < rows; j++)
             {
                 if (A(i,i) == 0)
                 {
@@ -542,6 +574,7 @@ Matrix& Matrix::operator|=(Matrix& rhs)
                 }
                 else
                 {
+                    
                     m = A(j,i) / A(i,i);
 
                     for (int k = 0; k < cols; k++)
@@ -554,6 +587,9 @@ Matrix& Matrix::operator|=(Matrix& rhs)
             }
         }
 
-        return A;
+        *this = A;
+        rhs = b;
+
+        return *this;
     }
 }
