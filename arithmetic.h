@@ -1,7 +1,3 @@
-//
-// Created by ditli on 9/21/2022.
-//
-
 #ifndef ASSIGNMENT2TEST_ARITHMETIC_H
 #define ASSIGNMENT2TEST_ARITHMETIC_H
 
@@ -18,11 +14,10 @@ public:
 
     virtual ~Arithmetic();
 
-    virtual void print() = 0; //pure virtual
+    virtual void print() = 0;
 
-    virtual void readFile(istream &infile) = 0; //pure virtual
+    virtual void readFile(istream &infile) = 0;
 
 };
 
-#endif //ASSIGNMENT2TEST_ARITHMETIC_H
-
+#endif

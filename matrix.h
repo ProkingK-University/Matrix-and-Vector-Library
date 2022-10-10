@@ -56,8 +56,6 @@ class Matrix : public Arithmetic
   Matrix& operator|=(Matrix& rhs);
 
  private:
-  // Insert helper function signatures if necessary
-
   double ** matrix; // the matrix array
   unsigned rows; // # rows
   unsigned cols; // # columns

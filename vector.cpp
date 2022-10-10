@@ -2,6 +2,7 @@
 
 #include <iomanip>
 
+//Vector constructor sets all values to 0
 Vector::Vector(unsigned s) : size(s)
 {
     vector = new double[size];
@@ -12,6 +13,7 @@ Vector::Vector(unsigned s) : size(s)
     }
 }
 
+//Copy constructor for vector
 Vector::Vector(const Vector& rhs)
 {
     size = rhs.size;
@@ -30,6 +32,7 @@ Vector::~Vector()
     vector = NULL;
 }
 
+//Prints out the values in the vector
 void Vector::print()
 {
     for (unsigned int i = 0; i < size; i++)
@@ -45,6 +48,7 @@ void Vector::print()
     }
 }
 
+//Reads values into vector
 void Vector::readFile(istream &infile)
 {
     for (unsigned int i = 0; i < size; i++)
@@ -53,6 +57,7 @@ void Vector::readFile(istream &infile)
     }
 }
 
+//Assignment operator for vector
 const Vector& Vector::operator=(const Vector& rhs)
 {
     if (&rhs == this)
@@ -76,6 +81,7 @@ const Vector& Vector::operator=(const Vector& rhs)
     }
 }
 
+//Adds two vectors together
 Vector Vector::operator+(const Vector& rhs)
 {
     if (size != rhs.size)
@@ -112,6 +118,7 @@ Vector& Vector::operator+=(const Vector& rhs)
     }
 }
 
+//Subtracts two vectors
 Vector Vector::operator-(const Vector& rhs)
 {
     if (size != rhs.size)
@@ -148,6 +155,7 @@ Vector& Vector::operator-=(const Vector& rhs)
     }
 }
 
+//Powers all vector elements
 Vector Vector::operator^(int pow)
 {
     if (pow < 0)
@@ -194,6 +202,7 @@ Vector& Vector::operator^=(int pow)
     }
 }
 
+//Reverses the vector
 Vector Vector::operator~()
 {
     Vector a(*this);
@@ -213,6 +222,7 @@ Vector Vector::operator~()
     return a;
 }
 
+//Scalar multiplication of vector
 Vector Vector::operator*(const double& rhs)
 {
     Vector a(*this);
@@ -247,6 +257,7 @@ Vector& Vector::operator*=(const double& rhs)
     return *this;
 }
 
+//Scalar division of vector
 Vector Vector::operator/(const double& rhs)
 {
     if (rhs == 0)
@@ -266,6 +277,7 @@ Vector Vector::operator/(const double& rhs)
     }
 }
 
+//Subscript operator of vector
 double& Vector::operator[](const unsigned r)
 {
     if (r < 0 || r >= size)

@@ -2,6 +2,7 @@
 
 #include <iomanip>
 
+//Matrix constuctor creates 2D array and sets them to 0;
 Matrix::Matrix(unsigned r, unsigned c) : rows(r), cols(c)
 {
     matrix = new double*[rows];
@@ -20,6 +21,7 @@ Matrix::Matrix(unsigned r, unsigned c) : rows(r), cols(c)
     }
 }
 
+//Copy constructor
 Matrix::Matrix(const Matrix& rhs)
 {
     rows = rhs.rows;
@@ -53,6 +55,7 @@ Matrix::~Matrix()
     matrix = NULL;
 }
 
+//Prints out matrix values
 void Matrix::print()
 {
     for (int i = 0; i < rows; i++)
@@ -66,6 +69,7 @@ void Matrix::print()
     }
 }
 
+//Read values into matrix file
 void Matrix::readFile(istream &infile)
 {
     for (int i = 0; i < rows; i++)
@@ -77,6 +81,7 @@ void Matrix::readFile(istream &infile)
     }
 }
 
+//Assignment operator for matrix
 const Matrix& Matrix::operator=(const Matrix& rhs)
 {
     if (&rhs == this)
@@ -113,6 +118,7 @@ const Matrix& Matrix::operator=(const Matrix& rhs)
     }
 }
 
+//Adds two matrix
 Matrix Matrix::operator+(const Matrix& rhs)
 {
     if ((rows != rhs.rows) || (cols != rhs.cols))
@@ -155,6 +161,7 @@ Matrix& Matrix::operator+=(const Matrix& rhs)
     }
 }
 
+//Subtracts two matrix
 Matrix Matrix::operator-(const Matrix& rhs)
 {
     if ((rows != rhs.rows) || (cols != rhs.cols))
@@ -197,6 +204,7 @@ Matrix& Matrix::operator-=(const Matrix& rhs)
     }
 }
 
+//Performs matrix multiplication
 Matrix Matrix::operator*(const Matrix& rhs)
 {
     if (cols != rhs.rows)
@@ -249,6 +257,7 @@ Matrix& Matrix::operator*=(const Matrix& rhs)
     }
 }
 
+//Performs matrix multiplicaton n times
 Matrix Matrix::operator^(int pow)
 {
     if (rows != cols)
@@ -337,6 +346,7 @@ Matrix& Matrix::operator^=(int pow)
     }
 }
 
+//Transposes matrix
 Matrix Matrix::operator~()
 {
     Matrix a(cols, rows);
@@ -352,6 +362,7 @@ Matrix Matrix::operator~()
     return a;
 }
 
+//Scalar multiplication of matrix
 Matrix Matrix::operator*(const double& rhs)
 {
     Matrix a(*this);
@@ -395,6 +406,7 @@ Matrix& Matrix::operator*=(const double& rhs)
     return *this;
 }
 
+//Scaler division of matrix
 Matrix Matrix::operator/(const double& rhs)
 {
     if (rhs == 0)
@@ -417,7 +429,8 @@ Matrix Matrix::operator/(const double& rhs)
     }
 }
 
-double& Matrix::operator()(const unsigned r, const unsigned c) 
+//Gets value from matrix
+double& Matrix::operator()(const unsigned r, const unsigned c)
 {
     if (r < 0 || r >= rows)
     {
@@ -479,6 +492,7 @@ unsigned Matrix::getRows() const {return rows;}
 
 unsigned Matrix::getCols() const {return cols;}
 
+//Performs backwards substitution
 Matrix Matrix::operator|(const Matrix& rhs)
 {
     if (rows != cols)
@@ -547,6 +561,7 @@ Matrix Matrix::operator|(const Matrix& rhs)
     }
 }
 
+//Performs Gaussian elimination
 Matrix& Matrix::operator|=(Matrix& rhs)
 {
     if (rows != cols)
@@ -593,3 +608,5 @@ Matrix& Matrix::operator|=(Matrix& rhs)
         return *this;
     }
 }
+
+// ;)

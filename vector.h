@@ -49,7 +49,7 @@ class Vector : public Arithmetic
   // Insert helper function signatures if necessary
 
   double * vector; // the vector array
-  unsigned size; // # size
+  unsigned size;
 };
 
 #endif
